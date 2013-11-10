@@ -1,0 +1,390 @@
+<HTML>
+<HEAD>
+
+ <style type="text/css">
+ <!--
+   .header {font-family:Tahoma, sans-serif; font-size: 12px; COLOR:#2FFFFF; padding-left:10; padding-right:5; font-weight:900 }
+   .text {font-family:Tahoma,sans-serif; font-size: 11px; color:#000000; padding-left:20; padding-right:10 }
+      .text2 {font-family:Tahoma,sans-serif; font-size: 11px; color:#000000; padding-left:20; padding-right:10; font-weight:100; }
+    .news {font-family:Arial, sans-serif; font-size: 9px; color:#ffffff; padding-left:10; padding-right:5; font-weight:900; }
+   a:link{text-decoration: none; color:#ffffff}
+  a:visited{text-decoration: none; color: #ffffff}
+  a:hover{text-decoration: underline; color: #ffffff}
+  a:active{text-decoration: none; color: #ffffff}
+  li {
+	list-style : url(images/pic.jpg);
+}
+ .ii {
+	list-style : url(images/ii.jpg);
+}
+.style9 {color: #0000FF}
+-->
+ </style>
+
+
+<TITLE>Perma-Tron Elevator</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
+
+<script LANGUAGE="JavaScript">
+<!--
+function popup(args) {
+
+		window.open (args, 'popup', 'toolbar=0,location=0,status=1,menubar=0,scrollbars=1,resizable=1,width=400,height=350');
+
+	}
+
+//-->
+</script>
+
+</HEAD>
+
+<script language="javascript" type="text/javascript">
+<!--
+
+/*
+Image w/ description tooltip- By Dynamic Web Coding (www.dyn-web.com)
+Copyright 2002 by Sharon Paine
+Visit http://www.dynamicdrive.com for this script
+*/
+
+/* IMPORTANT: Put script after tooltip div or 
+	 put tooltip div just before </BODY>. */
+
+var dom = (document.getElementById) ? true : false;
+var ns5 = ((navigator.userAgent.indexOf("Gecko")>-1) && dom) ? true: false;
+var ie5 = ((navigator.userAgent.indexOf("MSIE")>-1) && dom) ? true : false;
+var ns4 = (document.layers && !dom) ? true : false;
+var ie4 = (document.all && !dom) ? true : false;
+var nodyn = (!ns5 && !ns4 && !ie4 && !ie5) ? true : false;
+
+// resize fix for ns4
+var origWidth, origHeight;
+if (ns4) {
+	origWidth = window.innerWidth; origHeight = window.innerHeight;
+	window.onresize = function() { if (window.innerWidth != origWidth || window.innerHeight != origHeight) history.go(0); }
+}
+
+// avoid error of passing event object in older browsers
+if (nodyn) { event = "nope" }
+
+///////////////////////  CUSTOMIZE HERE   ////////////////////
+// settings for tooltip 
+// Do you want tip to move when mouse moves over link?
+var tipFollowMouse= true;	
+// Be sure to set tipWidth wide enough for widest image
+var tipWidth= 260;
+var offX= 20;	// how far from mouse to show tip
+var offY= 12; 
+var tipFontFamily= "Verdana, arial, helvetica, sans-serif";
+var tipFontSize= "8pt";
+// set default text color and background color for tooltip here
+// individual tooltips can have their own (set in messages arrays)
+// but don't have to
+var tipFontColor= "#000000";
+var tipBgColor= "#DDECFF"; 
+var tipBorderColor= "#000080";
+var tipBorderWidth= 1;
+var tipBorderStyle= "ridge";
+var tipPadding= 4;
+
+// tooltip content goes here (image, description, optional bgColor, optional textcolor)
+var messages = new Array();
+// multi-dimensional arrays containing: 
+// image and text for tooltip
+// optional: bgColor and color to be sent to tooltip
+messages[0] = new Array('images/humphrey_2.jpg','<center><BR><BR><font face="arial, helvetica, sans-serif" size="2" color="#0000FF"><b>Overhead Safety Stop Device.</b><BR>Dislodging of tubular bar activates limit switch to apply brake and stop manlift.</font></center>',"#FFFFFF");
+messages[1] = new Array('images/humphrey_3.jpg','<center><BR><BR><font face="arial, helvetica, sans-serif" size="2" color="#0000FF"><b>In-Track Safety Stop Device</b><BR>Stops manlift if rider neglects to get off on the top floor. The device is tripped by the weight of the person on the step.</font></center>',"#FFFFFF");
+messages[2] = new Array('images/humphrey_4.jpg','<center><BR> <font color="#0000FF"><BR><font face="arial, helvetica, sans-serif" size="2"><b>Foot Treadle Safety Stop Device</b><BR> Stops manlift if rider steps on treadle board. Furnished when required.</font></font></center>',"#FFFFFF");
+
+////////////////////  END OF CUSTOMIZATION AREA  ///////////////////
+
+// preload images that are to appear in tooltip
+// from arrays above
+if (document.images) {
+	var theImgs = new Array();
+	for (var i=0; i<messages.length; i++) {
+  	theImgs[i] = new Image();
+		theImgs[i].src = messages[i][0];
+  }
+}
+
+// to layout image and text, 2-row table, image centered in top cell
+// these go in var tip in doTooltip function
+// startStr goes before image, midStr goes between image and text
+var startStr = '<table width="' + tipWidth + '"><tr><td align="center" width="100%"><img src="';
+var midStr = '" border="0"></td></tr><tr><td valign="top">';
+var endStr = '</td></tr></table>';
+
+////////////////////////////////////////////////////////////
+//  initTip	- initialization for tooltip.
+//		Global variables for tooltip. 
+//		Set styles for all but ns4. 
+//		Set up mousemove capture if tipFollowMouse set true.
+////////////////////////////////////////////////////////////
+var tooltip, tipcss;
+function initTip() {
+	if (nodyn) return;
+	tooltip = (ns4)? document.tipDiv.document: (ie4)? document.all['tipDiv']: (ie5||ns5)? document.getElementById('tipDiv'): null;
+	tipcss = (ns4)? document.tipDiv: tooltip.style;
+	if (ie4||ie5||ns5) {	// ns4 would lose all this on rewrites
+		tipcss.width = tipWidth+"px";
+		tipcss.fontFamily = tipFontFamily;
+		tipcss.fontSize = tipFontSize;
+		tipcss.color = tipFontColor;
+		tipcss.backgroundColor = tipBgColor;
+		tipcss.borderColor = tipBorderColor;
+		tipcss.borderWidth = tipBorderWidth+"px";
+		tipcss.padding = tipPadding+"px";
+		tipcss.borderStyle = tipBorderStyle;
+	}
+	if (tooltip&&tipFollowMouse) {
+		if (ns4) document.captureEvents(Event.MOUSEMOVE);
+		document.onmousemove = trackMouse;
+	}
+}
+
+window.onload = initTip;
+
+/////////////////////////////////////////////////
+//  doTooltip function
+//			Assembles content for tooltip and writes 
+//			it to tipDiv
+/////////////////////////////////////////////////
+var t1,t2;	// for setTimeouts
+var tipOn = false;	// check if over tooltip link
+function doTooltip(evt,num) {
+	if (!tooltip) return;
+	if (t1) clearTimeout(t1);	if (t2) clearTimeout(t2);
+	tipOn = true;
+	// set colors if included in messages array
+	if (messages[num][2])	var curBgColor = messages[num][2];
+	else curBgColor = tipBgColor;
+	if (messages[num][3])	var curFontColor = messages[num][3];
+	else curFontColor = tipFontColor;
+	if (ns4) {
+		var tip = '<table bgcolor="' + tipBorderColor + '" width="' + tipWidth + '" cellspacing="0" cellpadding="' + tipBorderWidth + '" border="0"><tr><td><table bgcolor="' + curBgColor + '" width="100%" cellspacing="0" cellpadding="' + tipPadding + '" border="0"><tr><td>'+ startStr + messages[num][0] + midStr + '<span style="font-family:' + tipFontFamily + '; font-size:' + tipFontSize + '; color:' + curFontColor + ';">' + messages[num][1] + '</span>' + endStr + '</td></tr></table></td></tr></table>';
+		tooltip.write(tip);
+		tooltip.close();
+	} else if (ie4||ie5||ns5) {
+		var tip = startStr + messages[num][0] + midStr + '<span style="font-family:' + tipFontFamily + '; font-size:' + tipFontSize + '; color:' + curFontColor + ';">' + messages[num][1] + '</span>' + endStr;
+		tipcss.backgroundColor = curBgColor;
+	 	tooltip.innerHTML = tip;
+	}
+	if (!tipFollowMouse) positionTip(evt);
+	else t1=setTimeout("tipcss.visibility='visible'",100);
+}
+
+var mouseX, mouseY;
+function trackMouse(evt) {
+	mouseX = (ns4||ns5)? evt.pageX: window.event.clientX + document.body.scrollLeft;
+	mouseY = (ns4||ns5)? evt.pageY: window.event.clientY + document.body.scrollTop;
+	if (tipOn) positionTip(evt);
+}
+
+/////////////////////////////////////////////////////////////
+//  positionTip function
+//		If tipFollowMouse set false, so trackMouse function
+//		not being used, get position of mouseover event.
+//		Calculations use mouseover event position, 
+//		offset amounts and tooltip width to position
+//		tooltip within window.
+/////////////////////////////////////////////////////////////
+function positionTip(evt) {
+	if (!tipFollowMouse) {
+		mouseX = (ns4||ns5)? evt.pageX: window.event.clientX + document.body.scrollLeft;
+		mouseY = (ns4||ns5)? evt.pageY: window.event.clientY + document.body.scrollTop;
+	}
+	// tooltip width and height
+	var tpWd = (ns4)? tooltip.width: (ie4||ie5)? tooltip.clientWidth: tooltip.offsetWidth;
+	var tpHt = (ns4)? tooltip.height: (ie4||ie5)? tooltip.clientHeight: tooltip.offsetHeight;
+	// document area in view (subtract scrollbar width for ns)
+	var winWd = (ns4||ns5)? window.innerWidth-20+window.pageXOffset: document.body.clientWidth+document.body.scrollLeft;
+	var winHt = (ns4||ns5)? window.innerHeight-20+window.pageYOffset: document.body.clientHeight+document.body.scrollTop;
+	// check mouse position against tip and window dimensions
+	// and position the tooltip 
+	if ((mouseX+offX+tpWd)>winWd) 
+		tipcss.left = (ns4)? mouseX-(tpWd+offX): mouseX-(tpWd+offX)+"px";
+	else tipcss.left = (ns4)? mouseX+offX: mouseX+offX+"px";
+	if ((mouseY+offY+tpHt)>winHt) 
+		tipcss.top = (ns4)? winHt-(tpHt+offY): winHt-(tpHt+offY)+"px";
+	else tipcss.top = (ns4)? mouseY+offY: mouseY+offY+"px";
+	if (!tipFollowMouse) t1=setTimeout("tipcss.visibility='visible'",100);
+}
+
+function hideTip() {
+	if (!tooltip) return;
+	t2=setTimeout("tipcss.visibility='hidden'",100);
+	tipOn = false;
+}
+
+//-->
+</script>
+
+<BODY BGCOLOR=#FFFFFF LEFTMARGIN=0 TOPMARGIN=0 MARGINWIDTH=0 MARGINHEIGHT=0>
+ <script language=JavaScript>
+<!--
+
+//Disable perma-tron right click
+
+
+var message="Function Disabled!";
+
+///////////////////////////////////
+function clickIE4(){
+if (event.button==2){
+alert(message);
+return false;
+}
+}
+
+function clickNS4(e){
+if (document.layers||document.getElementById&&!document.all){
+if (e.which==2||e.which==3){
+alert(message);
+return false;
+}
+}
+}
+
+if (document.layers){
+document.captureEvents(Event.MOUSEDOWN);
+document.onmousedown=clickNS4;
+}
+else if (document.all&&!document.getElementById){
+document.onmousedown=clickIE4;
+}
+
+document.oncontextmenu=new Function("alert(message);return false")
+
+// --> 
+</script>
+<TABLE WIDTH=780 BORDER=0 CELLPADDING=0 CELLSPACING=0 align="center" height=100%>
+<tr>
+	<td bgcolor=#000000 rowspan=100><img src="images/spacer.gif" with=1 width="1" height="1"></td>
+	<td HEIGHT="192"><OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+ codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+ WIDTH="780" HEIGHT="192" ALIGN="">
+      <PARAM NAME=movie VALUE="flash/header.swf">
+      <PARAM NAME=quality VALUE=high>
+      <PARAM NAME=bgcolor VALUE=#FFFFFF>
+      <EMBED src="flash/header.swf" quality=high bgcolor=#FFFFFF  WIDTH="780" HEIGHT="192" ALIGN=""
+ TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>
+    </OBJECT></td>
+	<td bgcolor=#000000 rowspan=100><img src="images/spacer.gif" with=1 width="1" height="1"></td>
+</tr>
+<tr><td>
+<!--   -->
+<TABLE WIDTH=780 BORDER=0 CELLPADDING=0 CELLSPACING=0  align="center" height=100%>
+	<TR>
+		<td height="100%" COLSPAN=2 valign="top" background="images/lbg.jpg">
+		<strong>
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="211" height="547" align="left">
+              <param name="movie" value="flash/navpanel.swf">
+              <param name=quality value=High>
+              <embed src="flash/navpanel.swf" quality=High pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" width="211" height="547"></embed>
+            </object>
+		  </strong>
+		    <!-- left text-->			
+	      </div></td>
+		<TD COLSPAN=7  valign="top" height="100%" background="images/white.jpg"><blockquote>
+		  <p>&nbsp;</p>
+		  <table background="images/dot_clear.gif" border="0" cellpadding="1" cellspacing="0">
+		    <tbody>
+		      <tr>
+		        <td valign="bottom" background="images/dot_clear.gif" class="style9"><font face="arial, helvetica, sans-serif" size="5"><b>Humphrey Manlifts</b></font></td>
+		        </tr>
+              <tr>
+                <td valign="top" background="images/dot_clear.gif" class="style9"><img src="images/dot_black.gif" border="0" height="1" width="350"></td>
+              </tr>
+            </tbody>
+		    </table>
+		  <p><span class="style9"><br>
+		  
+		  
+		  <a href="#" onmouseover="doTooltip(event,0)" onmouseout="hideTip()">Link 1</a><br>
+<a href="#" onmouseover="doTooltip(event,1)" onmouseout="hideTip()">Link 2</a>
+              <font face="arial, helvetica, sans-serif" size="2">Click on red links
+                to get a closer look...</b></font></span><font face="arial, helvetica, sans-serif" size="2"><br>
+                <br><a href="#" onmouseover="doTooltip(event,0)" onmouseout="hideTip()">Link 1</a>
+                <map name="FPMap0">
+				<area href="#" onmouseover="doTooltip(event,0)" onmouseout="hideTip()" shape="rect" coords="71, 11, 163, 44">
+				<area href="#" onmouseover="doTooltip(event,1)" onmouseout="hideTip()" shape="rect" coords="240, 142, 323, 170">
+				<area href="#" onmouseover="doTooltip(event,2)" onmouseout="hideTip()" shape="rect" coords="7, 424, 122, 464">
+				<area shape="default" coords>
+			</map>
+			<img rectangle="(7,424) (122,464) javascript:popup('humphrey4.htm');" src="images/humphrey_1.gif" border="0" width="375" height="473" usemap="#FPMap0"> <br>
+                <br>
+                <span class="style9"><img src="images/dot_clear.gif" width="15" height="1" border="0">If
+                your employees must travel vertically in the routine performance of their duties, the
+                low-cost mechanical solution is the Humphrey Employees' Belt Manlift. It provides reliable
+                vertical transportation that saves time and energy. In contrast to conventional elevators,
+                there is no waiting for a Humphrey Employees' Belt Manlift. Its endless belt provides
+                continuous transportation in both directions. An employee may step on or off at any floor
+                without interrupting service for other employees using the belt manlift. One man can
+                perform inspection or supervisory duties on a number of floors, rapidly, and without
+                fatigue. Belt speed is 75 feet per minute for ease of getting on and off the moving steps.
+                <br>
+                <br>
+                <img src="images/dot_clear.gif" width="15" height="1" border="0">The
+                Humphrey Employees' Belt Manlift can be installed in any new or existing multi-floor
+                building. Initial cost, installation cost, and operating cost are all well below the costs
+                of conventional elevators. A Humphrey Manlift takes only a fraction of the floor space.
+                All models are heavy-duty construction, designed in accordance with the ASME A90.1 Safety
+                Standard for Belt Manlifts.</span></font><span class="style9"><br>
+                </font>
+                </span>
+                </p>
+		  <p class="style9">&nbsp;</p>
+		  <p><span class="style9"><FONT face="arial, helvetica, sans-serif" size=2>              </FONT>		        </span>      
+              <!-- center text-->
+                <!-- center text-->
+                <!-- right text-->
+                <!-- right text-->
+	          </p>
+		  </blockquote></TD>
+		</TR>
+	<TR>
+		<TD COLSPAN=9>
+			<img src="images/bar.jpg" width="780" height="15"></TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=3 background="images/16.jpg" WIDTH=232 HEIGHT=39 ALT="">
+		<div class="text">
+		  <p>Perma-Tron Elevator, Inc, Copyright © 2005, All Rights Reserved.</p>
+		  </div>
+		</TD>
+		<TD COLSPAN=6 background="images/17.jpg" WIDTH=548 HEIGHT=39 ALT="" align="center">
+			<div class="text"><strong>
+<a href="" style="color:000000">		</a></strong></div>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=9>
+			<IMG SRC="images/18.jpg" WIDTH=780 HEIGHT=20 ALT=""></TD>
+	</TR>
+	<TR>
+		<TD>
+			<IMG SRC="images/spacer.gif" WIDTH=116 HEIGHT=1 ALT=""></TD>
+		<TD>
+			<IMG SRC="images/spacer.gif" WIDTH=98 HEIGHT=1 ALT=""></TD>
+		<TD>
+			<IMG SRC="images/spacer.gif" WIDTH=18 HEIGHT=1 ALT=""></TD>
+		<TD>
+			<IMG SRC="images/spacer.gif" WIDTH=107 HEIGHT=1 ALT=""></TD>
+		<TD>
+			<IMG SRC="images/spacer.gif" WIDTH=104 HEIGHT=1 ALT=""></TD>
+		<TD>
+			<IMG SRC="images/spacer.gif" WIDTH=121 HEIGHT=1 ALT=""></TD>
+		<TD>
+			<IMG SRC="images/spacer.gif" WIDTH=29 HEIGHT=1 ALT=""></TD>
+		<TD>
+			<IMG SRC="images/spacer.gif" WIDTH=92 HEIGHT=1 ALT=""></TD>
+		<TD>
+			<IMG SRC="images/spacer.gif" WIDTH=95 HEIGHT=1 ALT=""></TD>
+	</TR>
+</TABLE>
+<!--   -->
+</td></tr></table>
+ <div id="tipDiv" style="position:absolute; visibility:hidden; z-index:100"></div>
+</BODY>
+</HTML>
